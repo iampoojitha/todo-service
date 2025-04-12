@@ -1,9 +1,10 @@
 package com.example.demo.Dto;
 
 import com.example.demo.constants.Status;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
+import jakarta.persistence.*;
 import lombok.*;
+
+import java.time.LocalDateTime;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -12,13 +13,23 @@ import lombok.*;
 @EqualsAndHashCode
 public class TaskDto {
 
-    public String name;
+    private Long id;
+    private String name;
+    private String description;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
+    private Status status = Status.CREATED;
+    private String customerName;
+    private String email;
 
-    public String description;
+    @PrePersist
+    protected void onCreate() {
+        createdAt = LocalDateTime.now();
+        updatedAt = LocalDateTime.now();
+    }
 
-    @Enumerated(EnumType.STRING)
-    public Status status;
-
-    public String customerName;
-
+    @PreUpdate
+    protected void onUpdate() {
+        updatedAt = LocalDateTime.now();
+    }
 }
