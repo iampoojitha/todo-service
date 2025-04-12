@@ -42,7 +42,27 @@ public class TaskRoute {
             log.error("failed to fetch the task details with the id:"+id);
             throw new Exception(AppConfig.SOMETHING_WENT_WRONG + Arrays.toString(e.getStackTrace()));
         }
+    }
 
+    @PutMapping(AppConfig.UPDATE_TASK)
+    public ResponseEntity<TaskDto> updateTask(@Valid @RequestBody TaskDto request) throws Exception {
+        try {
+            return ResponseEntity.ok(taskService.updateTask(request));
+        } catch (Exception e) {
+            log.error("failed to update the task with id {} and request: {}", request.getId(), request);
+            throw new Exception(AppConfig.SOMETHING_WENT_WRONG + Arrays.toString(e.getStackTrace()));
+        }
+    }
+
+    @DeleteMapping(AppConfig.DELETE_TASK)
+    public ResponseEntity<Void> deleteTask(@PathVariable Long id) throws Exception {
+        try {
+            taskService.deleteTask(id);
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            log.error("failed to delete the task with id {}", id);
+            throw new Exception(AppConfig.SOMETHING_WENT_WRONG + Arrays.toString(e.getStackTrace()));
+        }
     }
 
     }

@@ -4,12 +4,15 @@ import com.example.demo.Dto.TaskDto;
 import com.example.demo.mappers.RequestMapper;
 import com.example.demo.model.Task;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 import com.example.demo.repository.TaskRepository;
 import com.example.demo.services.TaskService;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class TaskServiceImpl implements TaskService {
 
@@ -34,6 +37,21 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public TaskDto getTask(Long id) {
-        return requestMapper.mapToTaskDto(taskRepository.getById(id));
+        return requestMapper.mapToTaskDto(taskRepository.findById(id).orElseThrow(null));
     }
+
+    @Override
+    public TaskDto updateTask(TaskDto taskDto) {
+        Task existingTask = taskRepository.findById(taskDto.getId())
+                .orElseThrow(() -> new RuntimeException("Task not found with id: " + taskDto.getId()));
+        requestMapper.updateTaskFromDto(taskDto, existingTask);
+        Task updatedTask = taskRepository.save(existingTask);
+        return requestMapper.mapToTaskDto(updatedTask);
+    }
+
+    @Override
+    public void deleteTask(Long id) {
+        taskRepository.deleteById(id);
+    }
+
 }
