@@ -1,13 +1,17 @@
-package Dto;
+package com.example.demo.Dto;
 
-import constants.Status;
-import jakarta.annotation.Nonnull;
+import com.example.demo.constants.Status;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import lombok.*;
 
+@NoArgsConstructor
+@AllArgsConstructor
+@Setter
+@Getter
+@EqualsAndHashCode
 public class TaskDto {
 
-    @Nonnull
     public String name;
 
     public String description;
